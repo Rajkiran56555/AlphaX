@@ -1,0 +1,83 @@
+Docker
+*******
+-- Container mangement Service
+-- Keyword Develop, Ship, Run
+-- Reduce development size by providing smaller footprints
+-- Can deploy anywhere like vm's, physical server and even cloud
+
+Installation (Centos)
+*********************
+-- yum -y install lvm2 device-mapper device-mapper-persistent-data device-mapper-event device-mapper-libs device-mapper-event-libs
+-- wget https://download.docker.com/linux/centos/docker-ce.repo -O /etc/yum.repos.d/docker-ce.repo
+-- yum -y install docker-ce docker
+-- systemctl start docker
+-- systemctl enable docker
+-- docker -v
+-- usermod -aG docker <username>
+
+GetStarted
+**********
+-- docker run hello-world
+-- docker image pull <Image-Name>
+-- docker image ls
+-- docker image rm <Image-name>
+-- docker run <image-name>
+-- docker run -it <image-name> /bin/bash
+
+-- docker ps -al
+-- docker strat/stop <container-id>
+-- docker ls -a
+-- docker rm <container-id>
+
+Build your own Sample-Application
+*********************************
+-- git clone https://github.com/docker/getting-started.git
+-- Copy that app folder
+-- cd to app
+-- cerate a Dockerfile
+-- Add the below content to docker file
+ FROM node:12-alpine
+ WORKDIR /app
+ COPY . .
+ RUN yarn install --production
+ CMD ["node", "src/index.js"]
+
+-- docker build -t <tag-name> <path to dockerfile>
+-- docker run -dp 3525:3000 <tag-name>
+-- http://<localhost>/<ip address>:3000
+
+***************************
+Dockerfile
+FROM tomcat:8.0-alpine
+LABEL maintainer="Mail-Id"
+
+ADD sample.war /usr/local/tomcat/webapps/
+
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
+
+git clone https://github.com/softwareyoga/docker-tomcat-tutorial.git
+cd 'docker-tomcat-tutorial'
+docker build -t mywebapp .
+docker run -p 8585:8080 mywebapp
+http://localhost:80
+
+*************
+Dockerfile
+
+FROM centos:latest
+MAINTAINER NewstarCorporation
+RUN yum -y install httpd
+COPY index.html /var/www/html/
+CMD [“/usr/sbin/httpd”, “-D”, “FOREGROUND”]
+EXPOSE 80
+
+Index.html
+
+*****************
+FROM nginx:alpine
+COPY . /usr/share/nginx/html
+
+docker build -t html-server-image:v1 .
+docker run -d -p 80:80 html-server-image:v1
+
